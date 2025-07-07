@@ -1,23 +1,26 @@
-collect-files-sdk
+# dropzonehub-sdk-js
 
 Official Node & Browser SDK for collect-files.com.
 
-✨ Features
-	•	Zero-config usage
-	•	Works in Node, Browser, Meteor, React Native
-	•	TypeScript support
-	•	Automatically targets the collect-files.com API
+## ✨ Features
+ - Zero-config usage
+ - Works in Node, Browser, Meteor, React Native
+ - Automatically targets the collect-files.com API
 
 ⸻
 
-🚀 Installation
+## 🚀 Installation
 ```bash
 npm install dropzonehub
 ```
 
 ⸻
 
-🎯 Usage
+## 🎯 Basic Usage
+
+
+### **Check the [full Meteor example right here](doc/meteor_avatar_example.md)!**
+
 
 ➜ 1️⃣ Server-side (create dropzones)
 
@@ -61,7 +64,7 @@ await dz.deleteFile(dropzoneId, fileId);
 
 ⸻
 
-🗺️ Typical Use Case (e.g. User Avatars)
+## 🗺️ Typical Use Case (e.g. User Avatars)
 
 ✅ On signup (server):
 	•	Create a dropzone with your API key
@@ -73,7 +76,7 @@ await dz.deleteFile(dropzoneId, fileId);
 
 ⸻
 
-🧭 Zero Config
+## 🧭 Zero Config
 
 ✅ Defaults to https://www.collect-files.com/api
 ✅ No setup needed for upload/download/list/delete.
@@ -81,6 +84,6 @@ await dz.deleteFile(dropzoneId, fileId);
 
 ⸻
 
-📜 License
+## 📜 License
 
 MIT

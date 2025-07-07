@@ -3,12 +3,7 @@
   "version": "0.1.0alpha",
   "description": "Official SDK for collect-files.com",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
-    "prepublishOnly": "npm run build"
-  },
+  "scripts": {},
   "author": "jepnet",
-  "license": "MIT",
-  "dependencies": {}
+  "license": "MIT"
 }
