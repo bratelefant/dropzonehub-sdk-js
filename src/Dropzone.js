@@ -1,7 +1,7 @@
 
 class Dropzone {
   constructor(options = {}) {
-    this.baseUrl = options.baseUrl ?? 'https://www.collect-files.com/api';
+    this.baseUrl = options.baseUrl ?? 'https://www.collect-files.com/api'; // this is subject to change to 'https://api.dropzonehub.com' in the future
     this.apiKey = options.apiKey;
   }
 
@@ -85,7 +85,7 @@ class Dropzone {
     return res.json();
   }
 
-  getFileUrl(dropzoneId, fileId) {
+  getFileUrl(fileId) {
     return `${this.baseUrl}/files/${fileId}`;
   }
 }
