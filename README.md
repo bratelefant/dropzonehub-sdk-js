@@ -40,8 +40,9 @@ await dropzone.deleteFile(file);
  - Automatically targets the collect-files.com API
 
 ## Installation
-
-This isn't released yet ;)
+```bash
+npm install dropzonehub
+```
 
 ## Docs
 Check the [docs](docs/API.md)
