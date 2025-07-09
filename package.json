@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "description": "Official SDK for collect-files.com",
   "main": "src/index.js",
-  "scripts": {},
+  "scripts": {
+    "build-docs": "npx jsdoc ./src -r -d ./docs"
+  },
   "author": "jepnet",
   "license": "MIT"
 }
