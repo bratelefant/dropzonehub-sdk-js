@@ -30,8 +30,8 @@ const file = new File(["content"], "example.txt", { type: "text/plain" });
 
 // Do some fun stuff with your dropzone
 const uploadedFile = await dropzone.uploadFile(file);
-const downloadedFile = await dropzone.downloadFile(file);
-await dropzone.deleteFile(file);
+const downloadedFile = await dropzone.downloadFile(uploadedFile._id);
+await dropzone.deleteFile(uploadedFile._id);
 ```
 
 ## Features
