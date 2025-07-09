@@ -1,6 +1,32 @@
 # dropzonehub-sdk-js
 
-Official Node & Browser SDK for collect-files.com.
+Upload, download and manage files in the cloud in your meteorjs, nextjs, express, or any node and javascript app easily, with **dropzones**.
+
+- Get your free api key - no account needed: [https://www.collect-files.com/devs](https://www.collect-files.com/devs)
+- Use your api key with this sdk on your server to deliver dropzones to your clients
+- Your client can easily upload, download and manage their files
+
+### On your server
+```js
+const serversideClient = new DropzoneClient({
+  baseUrl: "https://www.collect-files.com/api/v1",
+  apiKey: "your-api-key"
+});
+
+const dropzone = await serversideClient.create({ gb: 1, days: 30 }); // send the dropzone._id to your client
+```
+
+### On your client
+```js
+const client = new DropzoneClient({
+  baseUrl: "https://www.collect-files.com/api/v1",
+  dropzoneId: "your-dropzone-id"
+});
+
+// Upload a file to the dropzone
+const file = new File(["content"], "example.txt", { type: "text/plain" });
+const uploadedFile = await client.uploadFile(file);
+```
 
 ## Features
  - Zero-config usage

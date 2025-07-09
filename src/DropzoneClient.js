@@ -36,12 +36,6 @@ const version = "/v1";
  * console.log("File uploaded:", uploadedFile);
  */
 class DropzoneClient {
-  /**
-   * @param {Object} options - Configuration options for the client.
-   * @param {string} [options.baseUrl] - The base URL for the API.
-   * @param {string} [options.apiKey] - The API key for authentication. Don't pass this to the constructor if you are on the client-side.
-   * @param {string} [options.dropzoneId] - Optional dropzone ID for operations that require it.
-   */
   constructor(options = {}) {
     this.baseUrl = options.baseUrl ?? host + version; // this is subject to change to 'https://api.dropzonehub.com' in the future
 
@@ -136,7 +130,7 @@ class DropzoneClient {
 
   /**
    * Upload a file to the dropzone. This requires a dropzone ID to be set in the client instance.
-   * Internally, the file is uploaded in three steps: 
+   * Internally, the file is uploaded in three steps:
    * First, a presigned URL is requested.
    * Then the file is uploaded to that URL.
    * After the upload, the file metadata is confirmed.
