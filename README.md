@@ -3,8 +3,10 @@
 Upload, download and manage files in the cloud in your meteorjs, nextjs, express, or any node and javascript app easily, with **dropzones**.
 
 - Get your free api key - no account needed: [https://www.collect-files.com/devs](https://www.collect-files.com/devs)
-- Use your api key with this sdk on your server to deliver dropzones to your clients
-- Your client can easily upload, download and manage their files
+- Use your api key with this sdk on your server to deliver **dropzones** to your client
+- Upload, download and manage files in your **dropzone**
+
+We use aws s3 for our service to store the files.
 
 ### On your server
 ```js
