@@ -1,1 +1,1 @@
-export { Dropzone } from './Dropzone';
+export { DropzoneClient } from './DropzoneClient';
