@@ -11,23 +11,27 @@ We use aws s3 for our service to store the files.
 ### On your server
 ```js
 const serversideClient = new DropzoneClient({
-  baseUrl: "https://www.collect-files.com/api/v1",
   apiKey: "your-api-key"
 });
 
-const dropzone = await serversideClient.create({ gb: 1, days: 30 }); // send the dropzone._id to your client
+const dropzone = await serversideClient.create({ gb: 1, days: 30 });
 ```
+
+Send the `dropzone._id` to the client, e.g. by storing it in your users profile.
 
 ### On your client
 ```js
-const client = new DropzoneClient({
-  baseUrl: "https://www.collect-files.com/api/v1",
+const dropzone = new DropzoneClient({
   dropzoneId: "your-dropzone-id"
 });
 
 // Upload a file to the dropzone
 const file = new File(["content"], "example.txt", { type: "text/plain" });
-const uploadedFile = await client.uploadFile(file);
+
+// Do some fun stuff with your dropzone
+const uploadedFile = await dropzone.uploadFile(file);
+const downloadedFile = await dropzone.downloadFile(file);
+await dropzone.deleteFile(file);
 ```
 
 ## Features
