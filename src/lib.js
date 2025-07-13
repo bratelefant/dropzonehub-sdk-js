@@ -1,4 +1,5 @@
-export const isServer = typeof process !== "undefined" && !!process.versions?.node;
+export const isServer =
+  typeof process !== "undefined" && !!process.versions?.node;
 
 export const isDevelopment = process.env.NODE_ENV === "development";
 
