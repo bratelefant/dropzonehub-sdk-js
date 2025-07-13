@@ -1,6 +1,6 @@
 {
   "name": "dropzonehub",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Official SDK for collect-files.com",
   "main": "src/index.js",
   "scripts": {
