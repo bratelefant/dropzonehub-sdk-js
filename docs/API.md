@@ -7,6 +7,7 @@
     * [new DropzoneClient(options)](#new_DropzoneClient_new)
     * [.getApiKeyInfo()](#DropzoneClient+getApiKeyInfo) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.transferGbMonths(toApiKey, gbMonths)](#DropzoneClient+transferGbMonths) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.createApiKey()](#DropzoneClient+createApiKey) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.createDropzone(params)](#DropzoneClient+createDropzone) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getDropzone(dropzoneId)](#DropzoneClient+getDropzone) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.listFiles(dropzoneId)](#DropzoneClient+listFiles) ⇒ <code>Promise.&lt;Array&gt;</code>
@@ -16,6 +17,12 @@
     * [.downloadFile(fileId)](#DropzoneClient+downloadFile) ⇒ <code>Promise.&lt;Blob&gt;</code>
     * [.deleteFile(fileId)](#DropzoneClient+deleteFile) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getFileUrl(fileId)](#DropzoneClient+getFileUrl) ⇒ <code>string</code>
+    * [.getDropzonePermissions(dropzoneId)](#DropzoneClient+getDropzonePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.grantDropzonePermissions(dropzoneId, apiKey, permissions)](#DropzoneClient+grantDropzonePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.revokeDropzonePermissions(dropzoneId, apiKey, permissions)](#DropzoneClient+revokeDropzonePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.getFilePermissions(fileId)](#DropzoneClient+getFilePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.grantFilePermissions(fileId, apiKey, permissions)](#DropzoneClient+grantFilePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.revokeFilePermissions(fileId, apiKey, permissions)](#DropzoneClient+revokeFilePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="new_DropzoneClient_new"></a>
 
@@ -86,6 +93,20 @@ Do not use this method on the client-side, as it requires an API key that has th
 | toApiKey | <code>string</code> | The API key to transfer GB months to. |
 | gbMonths | <code>number</code> | The number of GB months to transfer. |
 
+<a name="DropzoneClient+createApiKey"></a>
+
+### dropzoneClient.createApiKey() ⇒ <code>Promise.&lt;Object&gt;</code>
+Create a new API key.
+Use this method to create new API keys for users of your own application.
+You can transfer GB months to this API key using the `transferGbMonths` method
+to enable them to create their own dropzones.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The created API key object.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+
 <a name="DropzoneClient+createDropzone"></a>
 
 ### dropzoneClient.createDropzone(params) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -145,6 +166,8 @@ Upload a file to the dropzone. Internally, the file is uploaded in three steps:
 First, a presigned URL is requested.
 Then the file is uploaded to that URL.
 After the upload, the file metadata is confirmed.
+
+All dropzone owners will be granted the file.own role for the file.
 
 **Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - The uploaded file details.  
@@ -233,4 +256,116 @@ Get the URL for a file in a dropzone.
 | Param | Type | Description |
 | --- | --- | --- |
 | fileId | <code>string</code> | The ID of the file to get the URL for. |
+
+<a name="DropzoneClient+getDropzonePermissions"></a>
+
+### dropzoneClient.getDropzonePermissions(dropzoneId) ⇒ <code>Promise.&lt;Object&gt;</code>
+Get current permissions for the dropzone.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The permissions for the dropzone.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the dropzone ID is not provided.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dropzoneId | <code>string</code> | The ID of the dropzone to get permissions for. |
+
+<a name="DropzoneClient+grantDropzonePermissions"></a>
+
+### dropzoneClient.grantDropzonePermissions(dropzoneId, apiKey, permissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+Grant permissions for a dropzone.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The updated permissions for the dropzone.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the dropzone ID or permissions are not provided.
+- <code>Error</code> If the API key is not valid.
+- <code>Error</code> If the permissions are not valid.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dropzoneId | <code>\*</code> | Id of the dropzone to grant permissions for. |
+| apiKey | <code>\*</code> | Target API key to grant permissions to. |
+| permissions | <code>\*</code> | Permissions to grant. |
+
+<a name="DropzoneClient+revokeDropzonePermissions"></a>
+
+### dropzoneClient.revokeDropzonePermissions(dropzoneId, apiKey, permissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+Revoke permissions for a dropzone.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The updated permissions for the dropzone.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the dropzone ID or permissions are not provided.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| dropzoneId | <code>\*</code> | Id of the dropzone to revoke permissions for. |
+| apiKey | <code>\*</code> | Target API key to revoke permissions from. |
+| permissions | <code>\*</code> | Permissions to revoke. |
+
+<a name="DropzoneClient+getFilePermissions"></a>
+
+### dropzoneClient.getFilePermissions(fileId) ⇒ <code>Promise.&lt;Object&gt;</code>
+Get current permissions for the file.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The permissions for the file.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the file ID is not provided.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fileId | <code>string</code> | The ID of the file to get permissions for. |
+
+<a name="DropzoneClient+grantFilePermissions"></a>
+
+### dropzoneClient.grantFilePermissions(fileId, apiKey, permissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+Grant permissions for a file.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The updated permissions for the file.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the file ID or permissions are not provided.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fileId | <code>string</code> | The ID of the file to grant permissions for. |
+| apiKey | <code>string</code> | The API key to grant permissions to. |
+| permissions | <code>Array.&lt;string&gt;</code> | The permissions to grant. |
+
+<a name="DropzoneClient+revokeFilePermissions"></a>
+
+### dropzoneClient.revokeFilePermissions(fileId, apiKey, permissions) ⇒ <code>Promise.&lt;Object&gt;</code>
+Revoke permissions for a file.
+
+**Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The updated permissions for the file.  
+**Throws**:
+
+- <code>Error</code> If the API key is not provided or if the request fails.
+- <code>Error</code> If the file ID or permissions are not provided.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fileId | <code>string</code> | The ID of the file to revoke permissions for. |
+| apiKey | <code>string</code> | The API key to revoke permissions from. |
+| permissions | <code>Array.&lt;string&gt;</code> | The permissions to revoke. |
 

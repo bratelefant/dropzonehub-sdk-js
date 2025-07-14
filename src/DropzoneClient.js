@@ -106,6 +106,15 @@ class DropzoneClient {
     return (await res.json()).data;
   }
 
+  /**
+   * Create a new API key.
+   * Use this method to create new API keys for users of your own application.
+   * You can transfer GB months to this API key using the `transferGbMonths` method
+   * to enable them to create their own dropzones.
+   *
+   * @returns {Promise<Object>} The created API key object.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   */
   async createApiKey() {
     this.checkApiKey();
     const res = await fetch(`${this.baseUrl}/apikeys`, {
@@ -200,6 +209,8 @@ class DropzoneClient {
    * First, a presigned URL is requested.
    * Then the file is uploaded to that URL.
    * After the upload, the file metadata is confirmed.
+   * 
+   * All dropzone owners will be granted the file.own role for the file.
    *
    * @param {string} dropzoneId - The ID of the dropzone to upload the file to.
    * @param {File} file - The file to upload.
@@ -334,6 +345,173 @@ class DropzoneClient {
    */
   getFileUrl(fileId) {
     return `${this.baseUrl}/files/${fileId}`;
+  }
+
+  /**
+   * Get current permissions for the dropzone.
+   *
+   * @param {string} dropzoneId - The ID of the dropzone to get permissions for.
+   * @returns {Promise<Object>} The permissions for the dropzone.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the dropzone ID is not provided.
+   */
+  async getDropzonePermissions(dropzoneId) {
+    this.checkApiKey();
+    if (!dropzoneId) {
+      throw Errors[400];
+    }
+    const res = await fetch(
+      `${this.baseUrl}/dropzones/${dropzoneId}/permissions`,
+      {
+        method: "GET",
+        headers: { "x-api-key": this.apiKey },
+      }
+    );
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
+  }
+
+  /**
+   * Grant permissions for a dropzone.
+   * @param {*} dropzoneId Id of the dropzone to grant permissions for.
+   * @param {*} apiKey Target API key to grant permissions to.
+   * @param {*} permissions Permissions to grant.
+   * @returns {Promise<Object>} The updated permissions for the dropzone.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the dropzone ID or permissions are not provided.
+   * @throws {Error} If the API key is not valid.
+   * @throws {Error} If the permissions are not valid.
+   */
+  async grantDropzonePermissions(dropzoneId, apiKey, permissions) {
+    this.checkApiKey();
+    if (!apiKey || !dropzoneId || !permissions) {
+      throw Errors[400];
+    }
+    const res = await fetch(
+      `${this.baseUrl}/dropzones/${dropzoneId}/permissions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": this.apiKey,
+        },
+        body: JSON.stringify({ apiKey, permissions }),
+      }
+    );
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
+  }
+
+  /**
+   * Revoke permissions for a dropzone.
+   * @param {*} dropzoneId Id of the dropzone to revoke permissions for.
+   * @param {*} apiKey Target API key to revoke permissions from.
+   * @param {*} permissions Permissions to revoke.
+   * @returns {Promise<Object>} The updated permissions for the dropzone.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the dropzone ID or permissions are not provided.
+   */
+  async revokeDropzonePermissions(dropzoneId, apiKey, permissions) {
+    this.checkApiKey();
+    if (!apiKey || !dropzoneId || !permissions) {
+      throw Errors[400];
+    }
+    const res = await fetch(
+      `${this.baseUrl}/dropzones/${dropzoneId}/permissions`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": this.apiKey,
+        },
+        body: JSON.stringify({ apiKey, permissions }),
+      }
+    );
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
+  }
+
+  /**
+   * Get current permissions for the file.
+   * @param {string} fileId - The ID of the file to get permissions for.
+   * @returns {Promise<Object>} The permissions for the file.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the file ID is not provided.
+   */
+  async getFilePermissions(fileId) {
+    this.checkApiKey();
+    if (!fileId) {
+      throw Errors[400];
+    }
+    const res = await fetch(`${this.baseUrl}/files/${fileId}/permissions`, {
+      method: "GET",
+      headers: { "x-api-key": this.apiKey },
+    });
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
+  }
+
+  /**
+   * Grant permissions for a file.
+   * @param {string} fileId - The ID of the file to grant permissions for.
+   * @param {string} apiKey - The API key to grant permissions to.
+   * @param {Array<string>} permissions - The permissions to grant.
+   * @returns {Promise<Object>} The updated permissions for the file.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the file ID or permissions are not provided.
+   */
+  async grantFilePermissions(fileId, apiKey, permissions) {
+    this.checkApiKey();
+    if (!fileId || !apiKey || !permissions) {
+      throw Errors[400];
+    }
+    const res = await fetch(`${this.baseUrl}/files/${fileId}/permissions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.apiKey,
+      },
+      body: JSON.stringify({ apiKey, permissions }),
+    });
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
+  }
+  /**
+   * Revoke permissions for a file.
+   * @param {string} fileId - The ID of the file to revoke permissions for.
+   * @param {string} apiKey - The API key to revoke permissions from.
+   * @param {Array<string>} permissions - The permissions to revoke.
+   * @returns {Promise<Object>} The updated permissions for the file.
+   * @throws {Error} If the API key is not provided or if the request fails.
+   * @throws {Error} If the file ID or permissions are not provided.
+   */
+  async revokeFilePermissions(fileId, apiKey, permissions) {
+    this.checkApiKey();
+    if (!fileId || !apiKey || !permissions) {
+      throw Errors[400];
+    }
+    const res = await fetch(`${this.baseUrl}/files/${fileId}/permissions`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": this.apiKey,
+      },
+      body: JSON.stringify({ apiKey, permissions }),
+    });
+    if (!res.ok) {
+      throw Errors.resError(res);
+    }
+    return (await res.json()).data;
   }
 }
 
