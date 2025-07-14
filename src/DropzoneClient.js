@@ -66,7 +66,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -100,7 +100,7 @@ class DropzoneClient {
     );
 
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
 
     return (await res.json()).data;
@@ -126,7 +126,7 @@ class DropzoneClient {
     });
 
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
 
     return (await res.json()).data;
@@ -152,9 +152,7 @@ class DropzoneClient {
     });
 
     if (!res.ok) {
-      throw new Error(
-        `Failed to create dropzone: ${res.status} ${res.statusText}`
-      );
+      throw await Errors.resError(res);
     }
 
     return (await res.json()).data;
@@ -176,7 +174,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -199,7 +197,7 @@ class DropzoneClient {
       },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -237,7 +235,7 @@ class DropzoneClient {
       }),
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     const result = await res.json();
     const { fileId, signedUrl } = result.data;
@@ -254,7 +252,7 @@ class DropzoneClient {
       body: file,
     });
     if (!uploadRes.ok) {
-      throw Errors.resError(uploadRes);
+      throw await Errors.resError(uploadRes);
     }
     // Finally, confirm the upload by updating the file metadata
     log(`Confirming upload for file ID: ${fileId}`);
@@ -285,7 +283,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -314,7 +312,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return res.blob();
   }
@@ -333,7 +331,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return res.json();
   }
@@ -368,17 +366,17 @@ class DropzoneClient {
       }
     );
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
 
   /**
    * Grant permissions for a dropzone.
-   * @param {*} dropzoneId Id of the dropzone to grant permissions for.
-   * @param {*} apiKey Target API key to grant permissions to.
-   * @param {*} permissions Permissions to grant.
-   * @returns {Promise<Object>} The updated permissions for the dropzone.
+   * @param {string} dropzoneId - Id of the dropzone to grant permissions for.
+   * @param {string} apiKey - Target API key to grant permissions to.
+   * @param {Array<string>} permissions - Permissions to grant. Cf. https://www.collect-files.com/docs
+   * @returns {Promise<Array<string>>} The updated permissions for the dropzone.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the dropzone ID or permissions are not provided.
    * @throws {Error} If the API key is not valid.
@@ -401,17 +399,17 @@ class DropzoneClient {
       }
     );
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
 
   /**
    * Revoke permissions for a dropzone.
-   * @param {*} dropzoneId Id of the dropzone to revoke permissions for.
-   * @param {*} apiKey Target API key to revoke permissions from.
-   * @param {*} permissions Permissions to revoke.
-   * @returns {Promise<Object>} The updated permissions for the dropzone.
+   * @param {string} dropzoneId - Id of the dropzone to revoke permissions for.
+   * @param {string} apiKey - Target API key to revoke permissions from.
+   * @param {Array<string>} permissions - Permissions to revoke. Cf. https://www.collect-files.com/docs
+   * @returns {Promise<Array<string>>} The updated permissions for the dropzone.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the dropzone ID or permissions are not provided.
    */
@@ -432,7 +430,7 @@ class DropzoneClient {
       }
     );
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -440,7 +438,7 @@ class DropzoneClient {
   /**
    * Get current permissions for the file.
    * @param {string} fileId - The ID of the file to get permissions for.
-   * @returns {Promise<Object>} The permissions for the file.
+   * @returns {Promise<Array<string>>} The permissions for the file.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the file ID is not provided.
    */
@@ -454,7 +452,7 @@ class DropzoneClient {
       headers: { "x-api-key": this.apiKey },
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -463,8 +461,8 @@ class DropzoneClient {
    * Grant permissions for a file.
    * @param {string} fileId - The ID of the file to grant permissions for.
    * @param {string} apiKey - The API key to grant permissions to.
-   * @param {Array<string>} permissions - The permissions to grant.
-   * @returns {Promise<Object>} The updated permissions for the file.
+   * @param {Array<string>} permissions - The permissions to grant. Available permissions cf. https://www.collect-files.com/docs
+   * @returns {Promise<Array<string>>} The updated permissions for the file.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the file ID or permissions are not provided.
    */
@@ -482,7 +480,7 @@ class DropzoneClient {
       body: JSON.stringify({ apiKey, permissions }),
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }
@@ -490,8 +488,8 @@ class DropzoneClient {
    * Revoke permissions for a file.
    * @param {string} fileId - The ID of the file to revoke permissions for.
    * @param {string} apiKey - The API key to revoke permissions from.
-   * @param {Array<string>} permissions - The permissions to revoke.
-   * @returns {Promise<Object>} The updated permissions for the file.
+   * @param {Array<string>} permissions - The permissions to revoke. Available permissions cf. https://www.collect-files.com/docs
+   * @returns {Promise<Array<string>>} The updated permissions for the file.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the file ID or permissions are not provided.
    */
@@ -509,7 +507,7 @@ class DropzoneClient {
       body: JSON.stringify({ apiKey, permissions }),
     });
     if (!res.ok) {
-      throw Errors.resError(res);
+      throw await Errors.resError(res);
     }
     return (await res.json()).data;
   }

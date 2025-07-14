@@ -36,7 +36,7 @@ npm install dropzonehub
 ```
 
 ## Docs
-Check the [docs](docs/API.md)
+Check the [docs](https://github.com/bratelefant/dropzonehub-sdk-js/blob/main/docs/API.md)
 
 ## License
 
