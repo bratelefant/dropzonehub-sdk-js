@@ -10,8 +10,15 @@ export const Errors = {
   500: new Error(
     "Internal Server Error: An unexpected error occurred on the server."
   ),
-  resError: (res) =>
-    new Error(
-      `Error: ${res.status} - ${res.statusText}. Please check the API documentation for more details.`
-    ),
+  resError: async (res) => {
+    const body = await res.json();
+
+    return new Error(
+      `Status: ${res.status}; StatusText: ${res.statusText}; ErrorType: ${
+        body.message || "Unknown error"
+      }. ErrorData: ${
+        JSON.stringify(body.data) || "No additional data available."
+      }`
+    );
+  },
 };
