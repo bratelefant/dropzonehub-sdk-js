@@ -136,19 +136,24 @@ class DropzoneClient {
    * Create a new dropzone (requires API key). This will consume gb-months that you've charged on your api key.
    * One month is counted as 30 days. So if you create a 1 GB dropzone for 30 days, it will consume 1 GB-month;
    * if you create a 0.5 GB dropzone for 60 days, it will also consume 1 GB-month.
+   * 
+   * If you provide a name, it will try to find an existing dropzone with that name for the API key.
+   * If it exists, it will try to update the existing dropzone with the new parameters.
+   * If it does not exist, a new dropzone will be created with the specified parameters.
    *
    * @param {Object} params - Parameters for creating the dropzone.
    * @param {number} params.gb - The size of the dropzone in GB.
    * @param {number} params.days - The duration of the dropzone in days.
+   * @param {string} params.name - The name of the dropzone. IF not provided, a random name will be generated.
    * @returns {Promise<Object>} The created dropzone object.
    * @throws {Error} If the API key is not provided or if the request fails.
    */
-  async createDropzone({ gb, days }) {
+  async createDropzone({ gb, days, name }) {
     this.checkApiKey();
     const res = await fetch(`${this.baseUrl}/dropzones`, {
       method: "POST",
       headers: { "Content-Type": "application/json", "x-api-key": this.apiKey },
-      body: JSON.stringify({ gb, days }),
+      body: JSON.stringify({ gb, days, name }),
     });
 
     if (!res.ok) {
