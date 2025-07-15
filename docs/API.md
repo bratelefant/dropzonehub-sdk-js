@@ -17,7 +17,7 @@
     * [.downloadFile(fileId)](#DropzoneClient+downloadFile) ⇒ <code>Promise.&lt;Blob&gt;</code>
     * [.deleteFile(fileId)](#DropzoneClient+deleteFile) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getFileUrl(fileId)](#DropzoneClient+getFileUrl) ⇒ <code>string</code>
-    * [.getDropzonePermissions(dropzoneId)](#DropzoneClient+getDropzonePermissions) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+    * [.getDropzonePermissions(dropzoneId)](#DropzoneClient+getDropzonePermissions) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.grantDropzonePermissions(dropzoneId, apiKey, permissions)](#DropzoneClient+grantDropzonePermissions) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
     * [.revokeDropzonePermissions(dropzoneId, apiKey, permissions)](#DropzoneClient+revokeDropzonePermissions) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
     * [.getFilePermissions(fileId)](#DropzoneClient+getFilePermissions) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
@@ -114,6 +114,10 @@ Create a new dropzone (requires API key). This will consume gb-months that you'v
 One month is counted as 30 days. So if you create a 1 GB dropzone for 30 days, it will consume 1 GB-month;
 if you create a 0.5 GB dropzone for 60 days, it will also consume 1 GB-month.
 
+If you provide a name, it will try to find an existing dropzone with that name for the API key.
+If it exists, it will try to update the existing dropzone with the new parameters.
+If it does not exist, a new dropzone will be created with the specified parameters.
+
 **Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
 **Returns**: <code>Promise.&lt;Object&gt;</code> - The created dropzone object.  
 **Throws**:
@@ -126,6 +130,7 @@ if you create a 0.5 GB dropzone for 60 days, it will also consume 1 GB-month.
 | params | <code>Object</code> | Parameters for creating the dropzone. |
 | params.gb | <code>number</code> | The size of the dropzone in GB. |
 | params.days | <code>number</code> | The duration of the dropzone in days. |
+| params.name | <code>string</code> | The name of the dropzone. IF not provided, a random name will be generated. |
 
 <a name="DropzoneClient+getDropzone"></a>
 
@@ -259,11 +264,11 @@ Get the URL for a file in a dropzone.
 
 <a name="DropzoneClient+getDropzonePermissions"></a>
 
-### dropzoneClient.getDropzonePermissions(dropzoneId) ⇒ <code>Promise.&lt;Array.&lt;string&gt;&gt;</code>
+### dropzoneClient.getDropzonePermissions(dropzoneId) ⇒ <code>Promise.&lt;Object&gt;</code>
 Get current permissions for the dropzone.
 
 **Kind**: instance method of [<code>DropzoneClient</code>](#DropzoneClient)  
-**Returns**: <code>Promise.&lt;Array.&lt;string&gt;&gt;</code> - The permissions for the dropzone.  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - The permissions for the dropzone.  
 **Throws**:
 
 - <code>Error</code> If the API key is not provided or if the request fails.
