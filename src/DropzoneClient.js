@@ -77,18 +77,18 @@ class DropzoneClient {
    *
    * Do not use this method on the client-side, as it requires an API key that has the `apikey.create` role.
    *
-   * @param {string} toApiKey - The API key to transfer GB months to.
+   * @param {string} toApiKeyPublicId - The Public Id of the key to transfer GB months to.
    * @param {number} gbMonths - The number of GB months to transfer.
    * @returns {Promise<Object>} The result of the transfer operation.
    * @throws {Error} If the API key is not provided or if the request fails.
    */
-  async transferGbMonths(toApiKey, gbMonths) {
+  async transferGbMonths(toApiKeyPublicId, gbMonths) {
     this.checkApiKey();
-    if (!toApiKey || !gbMonths) {
+    if (!toApiKeyPublicId || !gbMonths) {
       throw Errors[400];
     }
     const res = await fetch(
-      `${this.baseUrl}/apikeys/${toApiKey}/transfer-gbmonths`,
+      `${this.baseUrl}/apikeys/${toApiKeyPublicId}/transfer-gbmonths`,
       {
         method: "POST",
         headers: {
@@ -379,7 +379,7 @@ class DropzoneClient {
   /**
    * Grant permissions for a dropzone.
    * @param {string} dropzoneId - Id of the dropzone to grant permissions for.
-   * @param {string} apiKey - Target API key to grant permissions to.
+   * @param {string} publicId - Public Id of the targeted API key to grant permissions to.
    * @param {Array<string>} permissions - Permissions to grant. Cf. https://www.collect-files.com/docs
    * @returns {Promise<Array<string>>} The updated permissions for the dropzone.
    * @throws {Error} If the API key is not provided or if the request fails.
@@ -387,9 +387,9 @@ class DropzoneClient {
    * @throws {Error} If the API key is not valid.
    * @throws {Error} If the permissions are not valid.
    */
-  async grantDropzonePermissions(dropzoneId, apiKey, permissions) {
+  async grantDropzonePermissions(dropzoneId, publicId, permissions) {
     this.checkApiKey();
-    if (!apiKey || !dropzoneId || !permissions) {
+    if (!publicId || !dropzoneId || !permissions) {
       throw Errors[400];
     }
     const res = await fetch(
@@ -400,7 +400,7 @@ class DropzoneClient {
           "Content-Type": "application/json",
           "x-api-key": this.apiKey,
         },
-        body: JSON.stringify({ apiKey, permissions }),
+        body: JSON.stringify({ publicId, permissions }),
       }
     );
     if (!res.ok) {
@@ -412,15 +412,15 @@ class DropzoneClient {
   /**
    * Revoke permissions for a dropzone.
    * @param {string} dropzoneId - Id of the dropzone to revoke permissions for.
-   * @param {string} apiKey - Target API key to revoke permissions from.
+   * @param {string} publicId - Public ID of the API key to revoke permissions from.
    * @param {Array<string>} permissions - Permissions to revoke. Cf. https://www.collect-files.com/docs
    * @returns {Promise<Array<string>>} The updated permissions for the dropzone.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the dropzone ID or permissions are not provided.
    */
-  async revokeDropzonePermissions(dropzoneId, apiKey, permissions) {
+  async revokeDropzonePermissions(dropzoneId, publicId, permissions) {
     this.checkApiKey();
-    if (!apiKey || !dropzoneId || !permissions) {
+    if (!publicId || !dropzoneId || !permissions) {
       throw Errors[400];
     }
     const res = await fetch(
@@ -431,7 +431,7 @@ class DropzoneClient {
           "Content-Type": "application/json",
           "x-api-key": this.apiKey,
         },
-        body: JSON.stringify({ apiKey, permissions }),
+        body: JSON.stringify({ publicId, permissions }),
       }
     );
     if (!res.ok) {
@@ -465,15 +465,15 @@ class DropzoneClient {
   /**
    * Grant permissions for a file.
    * @param {string} fileId - The ID of the file to grant permissions for.
-   * @param {string} apiKey - The API key to grant permissions to.
+   * @param {string} publicId - The public ID of the API key to grant permissions to.
    * @param {Array<string>} permissions - The permissions to grant. Available permissions cf. https://www.collect-files.com/docs
    * @returns {Promise<Array<string>>} The updated permissions for the file.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the file ID or permissions are not provided.
    */
-  async grantFilePermissions(fileId, apiKey, permissions) {
+  async grantFilePermissions(fileId, publicId, permissions) {
     this.checkApiKey();
-    if (!fileId || !apiKey || !permissions) {
+    if (!fileId || !publicId || !permissions) {
       throw Errors[400];
     }
     const res = await fetch(`${this.baseUrl}/files/${fileId}/permissions`, {
@@ -482,7 +482,7 @@ class DropzoneClient {
         "Content-Type": "application/json",
         "x-api-key": this.apiKey,
       },
-      body: JSON.stringify({ apiKey, permissions }),
+      body: JSON.stringify({ publicId, permissions }),
     });
     if (!res.ok) {
       throw await Errors.resError(res);
@@ -492,15 +492,15 @@ class DropzoneClient {
   /**
    * Revoke permissions for a file.
    * @param {string} fileId - The ID of the file to revoke permissions for.
-   * @param {string} apiKey - The API key to revoke permissions from.
+   * @param {string} publicId - The public ID of the API key to revoke permissions from.
    * @param {Array<string>} permissions - The permissions to revoke. Available permissions cf. https://www.collect-files.com/docs
    * @returns {Promise<Array<string>>} The updated permissions for the file.
    * @throws {Error} If the API key is not provided or if the request fails.
    * @throws {Error} If the file ID or permissions are not provided.
    */
-  async revokeFilePermissions(fileId, apiKey, permissions) {
+  async revokeFilePermissions(fileId, publicId, permissions) {
     this.checkApiKey();
-    if (!fileId || !apiKey || !permissions) {
+    if (!fileId || !publicId || !permissions) {
       throw Errors[400];
     }
     const res = await fetch(`${this.baseUrl}/files/${fileId}/permissions`, {
@@ -509,7 +509,7 @@ class DropzoneClient {
         "Content-Type": "application/json",
         "x-api-key": this.apiKey,
       },
-      body: JSON.stringify({ apiKey, permissions }),
+      body: JSON.stringify({ publicId, permissions }),
     });
     if (!res.ok) {
       throw await Errors.resError(res);
