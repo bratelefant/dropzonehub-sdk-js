@@ -25,6 +25,10 @@ const downloadedFile = await dropzone.downloadFile(uploadedFile._id);
 await dropzone.deleteFile(uploadedFile._id);
 ```
 
+If an uploaded file is made available to the public (by granting the permissions `file.download` for the file
+or `dropzone.download` for the dropzone the file lives in to the key `anyone`), it can be downloaded via the
+route `https://www.collect-files/cdn/{fileId}/download`.
+
 ## Features
  - Zero-config usage
  - Works in Node, Browser, Meteor, React Native
