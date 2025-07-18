@@ -225,6 +225,9 @@ class DropzoneClient {
     if (!dropzoneId) {
       throw Errors[400];
     }
+    if (!(file instanceof File)) {
+      throw new TypeError("Expected a File object");
+    }
     // First, request a presigned URL for the file
     log(`Requesting upload URL for file: ${file.name} (${file.size} bytes)`);
     const res = await fetch(`${this.baseUrl}/dropzones/${dropzoneId}/files`, {
