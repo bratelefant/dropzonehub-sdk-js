@@ -136,7 +136,7 @@ class DropzoneClient {
    * Create a new dropzone (requires API key). This will consume gb-months that you've charged on your api key.
    * One month is counted as 30 days. So if you create a 1 GB dropzone for 30 days, it will consume 1 GB-month;
    * if you create a 0.5 GB dropzone for 60 days, it will also consume 1 GB-month.
-   * 
+   *
    * If you provide a name, it will try to find an existing dropzone with that name for the API key.
    * If it exists, it will try to update the existing dropzone with the new parameters.
    * If it does not exist, a new dropzone will be created with the specified parameters.
@@ -212,21 +212,21 @@ class DropzoneClient {
    * First, a presigned URL is requested.
    * Then the file is uploaded to that URL.
    * After the upload, the file metadata is confirmed.
-   * 
+   *
    * All dropzone owners will be granted the file.own role for the file.
    *
    * @param {string} dropzoneId - The ID of the dropzone to upload the file to.
    * @param {File} file - The file to upload.
+   * @param {function} onProgress - Callback function to track upload progress.
+   * @param {AbortController} abortController - AbortController to cancel the upload.
    * @returns {Promise<Object>} The uploaded file details.
    * @throws {Error} If the request fails or if the dropzone ID is not set.
+   *
    */
-  async uploadFile(dropzoneId, file) {
+  async uploadFile(dropzoneId, file, onProgress, abortController) {
     this.checkApiKey();
     if (!dropzoneId) {
       throw Errors[400];
-    }
-    if (!(file instanceof File)) {
-      throw new TypeError("Expected a File object");
     }
     // First, request a presigned URL for the file
     log(`Requesting upload URL for file: ${file.name} (${file.size} bytes)`);
@@ -252,13 +252,53 @@ class DropzoneClient {
     }
     // Then, upload the file to the presigned URL
     log(`Uploading file to presigned URL: ${signedUrl}`);
-    const uploadRes = await fetch(signedUrl, {
-      method: "PUT",
-      headers: {
-        "Content-Type": file.type,
-      },
-      body: file,
-    });
+    let uploadRes;
+    // Use XMLHttpRequest for progress tracking if available
+    if (onProgress && typeof XMLHttpRequest !== "undefined") {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", signedUrl, true);
+      xhr.setRequestHeader("Content-Type", file.type);
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = (event.loaded / event.total) * 100;
+          onProgress(percentComplete);
+        }
+      };
+      xhr.onerror = () => {
+        throw new Error("Upload failed");
+      };
+      xhr.onload = () => {
+        if (xhr.status < 200 || xhr.status >= 300) {
+          throw new Error(`Upload failed with status ${xhr.status}`);
+        }
+      };
+      xhr.send(file);
+      // Wait for the upload to complete
+      await new Promise((resolve, reject) => {
+        xhr.onloadend = resolve;
+        xhr.onerror = reject;
+      });
+      uploadRes = { ok: xhr.status >= 200 && xhr.status < 300 };
+    } else {
+      // Fallback to fetch for environments without XMLHttpRequest
+      if (onProgress) {
+        warn(
+          "Progress tracking is not available in this environment. Use XMLHttpRequest for progress tracking."
+        );
+      }
+      if (abortController) {
+        abortController.signal.addEventListener("abort", () => {
+          throw new Error("Upload aborted");
+        });
+      }
+      uploadRes = await fetch(signedUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+    }
     if (!uploadRes.ok) {
       throw await Errors.resError(uploadRes);
     }

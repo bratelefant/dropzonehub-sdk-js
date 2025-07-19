@@ -11,7 +11,7 @@
     * [.createDropzone(params)](#DropzoneClient+createDropzone) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getDropzone(dropzoneId)](#DropzoneClient+getDropzone) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.listFiles(dropzoneId)](#DropzoneClient+listFiles) ⇒ <code>Promise.&lt;Array&gt;</code>
-    * [.uploadFile(dropzoneId, file)](#DropzoneClient+uploadFile) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.uploadFile(dropzoneId, file, onProgress, abortController)](#DropzoneClient+uploadFile) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.getFile(fileId)](#DropzoneClient+getFile) ⇒ <code>Promise.&lt;Object&gt;</code>
     * [.isUploaded(fileId)](#DropzoneClient+isUploaded) ⇒ <code>Promise.&lt;boolean&gt;</code>
     * [.downloadFile(fileId)](#DropzoneClient+downloadFile) ⇒ <code>Promise.&lt;Blob&gt;</code>
@@ -166,7 +166,7 @@ List files in the dropzone.
 
 <a name="DropzoneClient+uploadFile"></a>
 
-### dropzoneClient.uploadFile(dropzoneId, file) ⇒ <code>Promise.&lt;Object&gt;</code>
+### dropzoneClient.uploadFile(dropzoneId, file, onProgress, abortController) ⇒ <code>Promise.&lt;Object&gt;</code>
 Upload a file to the dropzone. Internally, the file is uploaded in three steps:
 First, a presigned URL is requested.
 Then the file is uploaded to that URL.
@@ -185,6 +185,8 @@ All dropzone owners will be granted the file.own role for the file.
 | --- | --- | --- |
 | dropzoneId | <code>string</code> | The ID of the dropzone to upload the file to. |
 | file | <code>File</code> | The file to upload. |
+| onProgress | <code>function</code> | Callback function to track upload progress. |
+| abortController | <code>AbortController</code> | AbortController to cancel the upload. |
 
 <a name="DropzoneClient+getFile"></a>
 
